@@ -1,17 +1,23 @@
-const administradorCheckbox = document.getElementById('administrador');
+(() => {
+    const administradorCheckbox = document.getElementById('administrador');
 
-administradorCheckbox.addEventListener('change', () => {
-    const passwordGroup = document.getElementById('password-group');
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('repassword');
+    const togglePasswordGroup = () => {
+        const passwordGroup = document.getElementById('password-group');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('repassword');
 
-    if (administradorCheckbox.checked) {
-        passwordInput.setAttribute('required', 'required');
-        confirmPasswordInput.setAttribute('required', 'required');
-    } else {
-        passwordInput.removeAttribute('required');
-        confirmPasswordInput.removeAttribute('required');
+        if (administradorCheckbox.checked) {
+            passwordInput.setAttribute('required', 'required');
+            confirmPasswordInput.setAttribute('required', 'required');
+            passwordGroup.classList.remove('hidden');
+        } else {
+            passwordInput.removeAttribute('required');
+            confirmPasswordInput.removeAttribute('required');
+            passwordGroup.classList.add('hidden');
+        }
     }
 
-    passwordGroup.classList.toggle('hidden');
-})
+    administradorCheckbox.addEventListener('change', togglePasswordGroup);
+
+    togglePasswordGroup();
+})();
