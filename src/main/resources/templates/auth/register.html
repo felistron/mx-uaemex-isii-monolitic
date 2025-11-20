@@ -20,7 +20,7 @@
             <section th:if="${res}" class="w-full">
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <p class="m-0">Se ha registrado el empleado <strong th:text="${res.correo()}"></strong> exitosamente.</p>
-                    <p th:if="${admin}" class="m-0">Haz <a class="alert-link" th:href="@{/auth/login}">clic aqui</a> para iniciar sesion como administrador.</p>
+                    <p th:if="${admin}" class="m-0">Haz <a class="alert-link" th:href="@{/auth/login}">clic aquí</a> para iniciar sesion como administrador.</p>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </section>
