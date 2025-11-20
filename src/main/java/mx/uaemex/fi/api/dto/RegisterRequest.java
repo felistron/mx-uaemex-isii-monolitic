@@ -12,7 +12,7 @@ public record RegisterRequest(
         @NotNull(message = "El RFC es obligatorio")
         @Pattern(
                 regexp = "^[A-Z&Ñ]{4}[0-9]{6}[A-Z0-9]{3}$",
-                message = "El RFC debe tener el siguiente formato: LLLLAAMMDDXXX; en donde L=(A-Z) letra o caracteres & o Ñ, AA=año, MM=mes, DD=día, XXX=alfanumerico; todo en mayúsculas y sin espacios"
+                message = "El RFC debe tener el siguiente formato: LLLLAAMMDDXXX; en donde L=(A-Z) letra o caracteres & o Ñ, AA=año, MM=mes, DD=día, XXX=alfanumérico; todo en mayúsculas y sin espacios"
         )
         @UniqueRFC
         String rfc,
