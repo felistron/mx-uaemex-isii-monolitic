@@ -60,9 +60,6 @@ public class AuthController {
         model.addAttribute("apellidos", request.apellidos());
         model.addAttribute("correo", request.correo());
         model.addAttribute("esAdministrador", request.esAdministrador());
-        model.addAttribute("password", request.password());
-        model.addAttribute("confirmPassword", request.confirmPassword());
-
         return "auth/register";
     }
 
