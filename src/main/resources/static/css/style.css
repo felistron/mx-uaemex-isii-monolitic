@@ -49,41 +49,6 @@ body {
     height: 100vh;
 }
 
-.input-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    gap: 1em;
-}
-
-.input-group label {
-    font-weight: bold;
-}
-
-.input-group input {
-    padding: 0.75em;
-    box-sizing: border-box;
-}
-
-.input-group span.suggestion {
-    color: #888;
-    font-size: small;
-}
-
-.checkbox-group {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.5em;
-    width: 100%;
-    justify-content: flex-start;
-}
-
-.checkbox-group input:hover, .checkbox-group label:hover {
-    cursor: pointer;
-}
-
 .card {
     border: 1px solid #ccc;
     padding: 2em;

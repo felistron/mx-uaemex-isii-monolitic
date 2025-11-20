@@ -2,9 +2,7 @@ package mx.uaemex.fi.api.service;
 
 import lombok.RequiredArgsConstructor;
 import mx.uaemex.fi.api.dto.*;
-import mx.uaemex.fi.api.exception.UserAlreadyExistsException;
 import mx.uaemex.fi.api.exception.InvalidCredentialsException;
-import mx.uaemex.fi.api.exception.ValidationException;
 import mx.uaemex.fi.api.model.Acceso;
 import mx.uaemex.fi.api.model.Empleado;
 import mx.uaemex.fi.api.repository.EmpleadoRepository;
@@ -41,15 +39,7 @@ public class AuthServiceImp implements AuthService {
 
     @Transactional
     @Override
-    public EmpleadoResponse register(RegisterRequest request) throws ValidationException, UserAlreadyExistsException {
-        if (empleadoRepository.existsByCorreo(request.correo())) {
-            throw new UserAlreadyExistsException("El correo electrónico ya ha sido registrado por otro empleado");
-        }
-
-        if (empleadoRepository.existsByRfc(request.rfc())) {
-            throw new UserAlreadyExistsException("El RFC ya ha sido registrado por otro empleado");
-        }
-
+    public EmpleadoResponse register(RegisterRequest request) {
         var empleado = Empleado.builder()
                 .rfc(request.rfc())
                 .nombre(request.nombre())
@@ -58,14 +48,6 @@ public class AuthServiceImp implements AuthService {
                 .build();
 
         if (!Objects.isNull(request.esAdministrador()) && request.esAdministrador()) {
-            if (Objects.isNull(request.password()) && Objects.isNull(request.confirmPassword())) {
-                throw new ValidationException("Contraseñas obligatorias");
-            }
-
-            if (!request.password().equals(request.confirmPassword())) {
-                throw new ValidationException("Las contraseñas no coinciden");
-            }
-
             var hashedPassword = passwordEncoder.encode(request.password());
 
             var acceso = Acceso.builder()

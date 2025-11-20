@@ -20,55 +20,52 @@
             <section th:if="${res}" class="w-full">
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <p class="m-0">Se ha registrado el empleado <strong th:text="${res.correo()}"></strong> exitosamente.</p>
-                    <p th:if="${admin}" class="m-0">Haz <a class="alert-link" th:href="@{/auth/login} + '?'">clic aqui</a> para iniciar sesion como administrador.</p>
+                    <p th:if="${admin}" class="m-0">Haz <a class="alert-link" th:href="@{/auth/login}">clic aquí</a> para iniciar sesion como administrador.</p>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </section>
             <form class="flex flex-column gap-4 w-full" th:action="@{/auth/registrar}" method="post">
-                <div class="input-group">
-                    <label for="rfc">RFC</label>
-                    <input type="text" th:name="rfc" id="rfc" placeholder="AAA012345XXX" required>
-                    <!-- <span class="suggestion">Texto en caso de error de validacion de campo</span> -->
+                <div>
+                    <label class="form-label" for="rfc">RFC</label>
+                    <input class="form-control" th:classappend="${rfcError} ? 'is-invalid'" type="text" th:name="rfc" th:value="${rfc}" id="rfc" placeholder="AAAA012345XXX" required>
+                    <div class="invalid-feedback" th:if="${rfcError}" th:text="${rfcError}"></div>
                 </div>
                 <div class="flex flex-row gap-2 w-full">
-                    <div class="input-group">
-                        <label for="nombre">Nombre(s)</label>
-                        <input class="w-full" type="text" th:name="nombre" id="nombre" placeholder="Juan" required>
-                        <!-- <span class="suggestion">Texto en caso de error de validacion de campo</span> -->
+                    <div class="w-full">
+                        <label class="form-label" for="nombre">Nombre(s)</label>
+                        <input class="form-control" th:classappend="${nombreError} ? 'is-invalid'" type="text" th:name="nombre" th:value="${nombre}" id="nombre" placeholder="Juan" required>
+                        <div class="invalid-feedback" th:if="${nombreError}" th:text="${nombreError}"></div>
                     </div>
-                    <div class="input-group">
-                        <label for="apellidos">Apellido(s)</label>
-                        <input class="w-full" type="text" th:name="apellidos" id="apellidos" placeholder="Pérez López" required>
-                        <!-- <span class="suggestion">Texto en caso de error de validacion de campo</span> -->
+                    <div class="w-full">
+                        <label class="form-label" for="apellidos">Apellido(s)</label>
+                        <input class="form-control" th:classappend="${apellidosError} ? 'is-invalid'" type="text" th:name="apellidos" th:value="${apellidos}" id="apellidos" placeholder="Pérez López" required>
+                        <div class="invalid-feedback" th:if="${apellidosError}" th:text="${apellidosError}"></div>
                     </div>
                 </div>
-                <div class="input-group">
-                    <label for="correo">Correo</label>
-                    <input class="w-full" type="email" th:name="correo" id="correo" placeholder="juan.perez@ejemplo.com" required>
-                    <!-- <span class="suggestion">Texto en caso de error de validacion de campo</span> -->
+                <div>
+                    <label class="form-label" for="correo">Correo</label>
+                    <input class="form-control" th:classappend="${correoError} ? 'is-invalid'" type="email" th:name="correo" th:value="${correo}" id="correo" placeholder="juan.perez@ejemplo.com" required>
+                    <div class="invalid-feedback" th:if="${correoError}" th:text="${correoError}"></div>
                 </div>
-                <div class="form-check checkbox-group">
-                    <input class="form-check-input" type="checkbox" th:name="esAdministrador" id="administrador">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" th:name="esAdministrador" th:checked="${esAdministrador}" id="administrador">
                     <label class="form-check-label" for="administrador">Crear como administrador</label>
                 </div>
                 <div class="flex flex-row gap-2 w-full hidden" id="password-group">
-                    <div class="input-group">
-                        <label for="password">Contraseña</label>
-                        <input class="w-full" type="password" th:name="password" id="password">
+                    <div class="w-full">
+                        <label class="form-label" for="password">Contraseña</label>
+                        <input class="form-control" th:classappend="${passwordError} ? 'is-invalid'" type="password" th:name="password" id="password">
+                        <div class="invalid-feedback" th:if="${passwordError}" th:text="${passwordError}"></div>
                     </div>
-                    <div class="input-group">
-                        <label for="repassword">Confirmar contraseña</label>
-                        <input class="w-full" type="password" th:name="confirmPassword" id="repassword">
+                    <div class="w-full">
+                        <label class="form-label" for="repassword">Confirmar contraseña</label>
+                        <input class="form-control" th:classappend="${confirmPasswordError} ? 'is-invalid'" type="password" th:name="confirmPassword" id="repassword">
+                        <div class="invalid-feedback" th:if="${confirmPasswordError}" th:text="${confirmPasswordError}"></div>
                     </div>
                 </div>
                 <button class="btn btn-primary" type="submit">Registrar</button>
             </form>
         </section>
-        <!--
-        <section class="w-50">
-            <img src="/images/employee.png" alt="Registro de empleados" width="100%">
-        </section>
-        -->
     </main>
     <script src="/js/register.js"></script>
 </body>
