@@ -54,7 +54,7 @@
                 <div class="flex flex-row gap-2 w-full hidden" id="password-group">
                     <div class="w-full">
                         <label class="form-label" for="password">Contraseña</label>
-                        <input class="form-control" th:classappend="${passwordError} ? 'is-invalid'" type="password" th:name="password" th:value="${password}" id="password">
+                        <input class="form-control" th:classappend="${passwordError} ? 'is-invalid'" type="password" th:name="password" id="password">
                         <div class="invalid-feedback" th:if="${passwordError}" th:text="${passwordError}"></div>
                     </div>
                     <div class="w-full">
