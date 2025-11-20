@@ -51,7 +51,7 @@ public class AuthController {
             }
             catch (Exception e) {
                 log.error("Error inesperado al registrar el usuario", e);
-                model.addAttribute("error", "Ha ocurrido un error inesparado al registrar el empleado");
+                model.addAttribute("error", "Ha ocurrido un error inesperado al registrar el empleado");
             }
         }
 
