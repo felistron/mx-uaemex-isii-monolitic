@@ -34,7 +34,12 @@ public class ConditionalPasswordValidator implements ConstraintValidator<Conditi
                     isValid = false;
                 }
 
-                if (!password.equals(confirmPassword)) {
+                if (confirmPassword == null || confirmPassword.isBlank()) {
+                    context.buildConstraintViolationWithTemplate("La confirmación de la contraseña es obligatoria para administradores")
+                            .addPropertyNode("confirmPassword")
+                            .addConstraintViolation();
+                    isValid = false;
+                } else if (!password.equals(confirmPassword)) {
                     context.buildConstraintViolationWithTemplate("Las contraseñas no coinciden")
                             .addPropertyNode("confirmPassword")
                             .addConstraintViolation();
