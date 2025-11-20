@@ -59,7 +59,7 @@
                     </div>
                     <div class="w-full">
                         <label class="form-label" for="repassword">Confirmar contraseña</label>
-                        <input class="form-control" th:classappend="${confirmPasswordError} ? 'is-invalid'" type="password" th:name="confirmPassword" th:value="${confirmPassword}" id="repassword">
+                        <input class="form-control" th:classappend="${confirmPasswordError} ? 'is-invalid'" type="password" th:name="confirmPassword" id="repassword">
                         <div class="invalid-feedback" th:if="${confirmPasswordError}" th:text="${confirmPasswordError}"></div>
                     </div>
                 </div>
