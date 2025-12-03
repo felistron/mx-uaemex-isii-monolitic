@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @Data
 @NoArgsConstructor
@@ -27,4 +29,7 @@ public class Empleado{
 
     @OneToOne(mappedBy = "empleado", cascade = CascadeType.ALL)
     private Acceso acceso;
+
+    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
+    private List<Nomina> nominas;
 }

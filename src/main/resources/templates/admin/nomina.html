@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de administración</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/bootstrap.bundle.min.js" defer></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/admin/dashboard">Panel de administración</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/empleados">Empleados</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/nomina">Nomina</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                    <li class="nav-item"><p class="m-0">Bienvenido, <strong th:text="${admin.nombre}"></strong></p></li>
+                    <li class="nav-item"><a class="nav-link" href="/auth/logout">Cerrar sesion</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main>
+        <section th:if="${error}" class="w-full">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </section>
+        <section class="w-50 m-auto my-4">
+            <form class="flex flex-column gap-4" th:method="post" th:action="@{'/admin/empleado/' + ${empleado.rfc} + '/nomina/registrar'}">
+                <h2>Información básica</h2>
+                <div>
+                    <label class="form-label" for="rfc">RFC</label>
+                    <input class="form-control" type="text" name="rfc" th:value="${empleado.rfc}" id="rfc" readonly required>
+                </div>
+                <div class="flex flex-row gap-2 justify-content-between">
+                    <div class="w-50">
+                        <label class="form-label" for="nombre">Nombre(s)</label>
+                        <input class="form-control" type="text" th:value="${empleado.nombre}" id="nombre" readonly>
+                    </div>
+                    <div class="w-50">
+                        <label class="form-label" for="apellidos">Apellido(s)</label>
+                        <input class="form-control" type="text" th:value="${empleado.apellidos}" id="apellidos" readonly>
+                    </div>
+                </div>
+                <h2>Nomina</h2>
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="salario">Salario bruto</label>
+                    <span class="input-group-text">MXN $</span>
+                    <input class="form-control" th:classappend="${salarioError} ? 'is-invalid'" type="text" name="salario" th:value="${salario}" id="salario" aria-label="Cantidad" required>
+                    <div class="invalid-feedback" th:if="${salarioError}" th:text="${salarioError}"></div>
+                </div>
+                <div class="flex flex-row gap-2 justify-content-between">
+                    <div class="w-50">
+                        <label class="form-label" for="inicio">Inicio del periodo</label>
+                        <input class="form-control" th:classappend="${nominaRequestError} ? 'is-invalid'" type="date" name="fechaInicio" th:value="${fechaInicio}" id="inicio" required>
+                        <div class="invalid-feedback" th:if="${nominaRequestError}" th:text="${nominaRequestError}"></div>
+                    </div>
+                    <div class="w-50">
+                        <label class="form-label" for="fin">Fin del periodo</label>
+                        <input class="form-control" th:classappend="${fechaFinError} ? 'is-invalid'" type="date" name="fechaFin" th:value="${fechaFin}" id="fin" required>
+                    </div>
+                </div>
+                <button class="btn btn-primary" type="submit">Guardar</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

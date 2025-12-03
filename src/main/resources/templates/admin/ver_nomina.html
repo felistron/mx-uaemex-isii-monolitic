@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de administración</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/bootstrap.bundle.min.js" defer></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/admin/dashboard">Panel de administración</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/empleados">Empleados</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/nomina">Nomina</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                    <li class="nav-item"><p class="m-0">Bienvenido, <strong th:text="${admin.nombre}"></strong></p></li>
+                    <li class="nav-item"><a class="nav-link" href="/auth/logout">Cerrar sesion</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main>
+        <section class="w-75 m-auto my-4 row g-4">
+            <h2>Información básica</h2>
+            <div>
+                <label class="form-label" for="rfc">RFC</label>
+                <input class="form-control" type="text" th:value="${empleado.rfc}" id="rfc" readonly>
+            </div>
+            <div class="flex flex-row gap-2 justify-content-between">
+                <div class="w-50">
+                    <label class="form-label" for="nombre">Nombre(s)</label>
+                    <input class="form-control" type="text" th:value="${empleado.nombre}" id="nombre" readonly>
+                </div>
+                <div class="w-50">
+                    <label class="form-label" for="apellidos">Apellido(s)</label>
+                    <input class="form-control" type="text" th:value="${empleado.apellidos}" id="apellidos" readonly>
+                </div>
+            </div>
+            <div>
+                <label class="form-label" for="correo">Correo</label>
+                <input class="form-control" type="text" th:value="${empleado.correo}" id="correo" readonly>
+            </div>
+            <h2>Historial</h2>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Inicio periodo</th>
+                    <th>Fin periodo</th>
+                    <th>Salario bruto</th>
+                    <th>Excedente</th>
+                    <th>Porcentaje</th>
+                    <th>Cuota fija</th>
+                    <th>Retención total</th>
+                    <th>Salario neto</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="nomina : ${empleado.nominas}">
+                    <td th:text="${nomina.periodoInicio}"></td>
+                    <td th:text="${nomina.periodoFin}"></td>
+                    <td th:text="${#numbers.formatCurrency(nomina.salarioBruto)}"></td>
+                    <td th:text="${#numbers.formatCurrency(nomina.excedenteSobreLimiteInferior)}"></td>
+                    <td th:text="${#numbers.formatPercent(nomina.porcentajeSobreExcedente, 0, 2)}"></td>
+                    <td th:text="${#numbers.formatCurrency(nomina.cuotaFija)}"></td>
+                    <td th:text="${#numbers.formatCurrency(nomina.cuotaFija + nomina.excedenteSobreLimiteInferior * nomina.porcentajeSobreExcedente)}"></td>
+                    <td th:text="${#numbers.formatCurrency(nomina.salarioBruto - (nomina.cuotaFija + nomina.excedenteSobreLimiteInferior * nomina.porcentajeSobreExcedente))}"></td>
+                    <td>
+                        <form th:method="post" th:action="@{'/admin/empleado/' + ${empleado.rfc} + '/nomina/' + ${nomina.id} + '/eliminar'}">
+                            <button class="btn btn-danger" type="submit">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>
