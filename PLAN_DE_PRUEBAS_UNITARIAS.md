@@ -811,12 +811,13 @@ Este plan debe actualizarse cuando:
 - [x] Generar reporte inicial de cobertura
 
 ### Implementación por Fases
-#### Fase 1 - Crítica
-- [ ] AuthServiceImpTest (9 casos)
-- [ ] JwtServiceImpTest (11 casos)
-- [ ] CalculoNominaService2025Test (18 casos)
-- [ ] ConditionalPasswordValidatorTest (11 casos)
-- [ ] JwtAuthenticationFilterTest (11 casos)
+#### Fase 1 - Crítica COMPLETADA (4 de diciembre de 2025)
+- [x] AuthServiceImpTest (9 casos) ✅
+- [x] JwtServiceImpTest (11 casos) ✅
+- [x] CalculoNominaService2025Test (47 casos - incluye parametrizadas) ✅
+- [x] ConditionalPasswordValidatorTest (11 casos) ✅
+- [x] JwtAuthenticationFilterTest (11 casos) ✅
+- **Total Fase 1**: 89 pruebas nuevas | 125 pruebas totales | Todas pasando ✅
 
 #### Fase 2 - Alta
 - [ ] NominaServiceImpTest (9 casos)
