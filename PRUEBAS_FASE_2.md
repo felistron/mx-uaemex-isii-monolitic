@@ -31,7 +31,7 @@ Total de pruebas: 154
 ### 1. NominaServiceImpTest.java
 **Ubicación**: `src/test/java/mx/uaemex/fi/api/service/NominaServiceImpTest.java`  
 **Casos de prueba**: 9 pruebas  
-**Estado**: ✅ PASANDO
+**Estado**: PASANDO
 
 **Cobertura de pruebas**:
 - Generación de nómina con empleado existente
