@@ -60,9 +60,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+            } else {
+                response.sendRedirect("/auth/login?tokenError=true");
+                return;
             }
         } catch (Exception e) {
             logger.error("Error al validar el token", e);
+            response.sendRedirect("/auth/login?tokenError=true");
+            return;
         }
 
         filterChain.doFilter(request, response);

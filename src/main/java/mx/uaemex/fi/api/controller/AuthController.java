@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Objects;
 
@@ -64,7 +65,8 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String loginPage() {
+    public String loginPage(Model model, @RequestParam(required = false) Boolean tokenError) {
+        if (Boolean.TRUE.equals(tokenError)) model.addAttribute("error", "La sesión ha expirado, por favor inicia sesión de nuevo");
         return "auth/login";
     }
 
@@ -78,6 +80,7 @@ public class AuthController {
             Cookie cookie = new Cookie("access_token", res.token());
             cookie.setHttpOnly(true);
             cookie.setPath("/");
+            cookie.setMaxAge((int) (res.expiresIn()/1000));
             response.addCookie(cookie);
             return "redirect:/admin/dashboard";
         } catch (InvalidCredentialsException e) {
