@@ -25,8 +25,7 @@ public class AdminController {
 
     @GetMapping("/dashboard")
     public String dashboardPage(Authentication auth, Model model) {
-        var empleado = empleadoService.buscarPorRFC(auth.getName());
-        model.addAttribute("admin", empleado);
+        model.addAttribute("admin", auth.getName());
         var empleados = empleadoService.obtenerTodos();
         model.addAttribute("empleados", empleados);
         return "admin/dashboard";
@@ -34,8 +33,7 @@ public class AdminController {
 
     @GetMapping("/nomina/consultar")
     public String verNomina(Model model, Authentication auth, @RequestParam String rfc) {
-        var admin = empleadoService.buscarPorRFC(auth.getName());
-        model.addAttribute("admin", admin);
+        model.addAttribute("admin", auth.getName());
         var empleado = empleadoService.buscarPorRFC(rfc);
         model.addAttribute("empleado", empleado);
         return "admin/ver_nomina";
@@ -43,8 +41,7 @@ public class AdminController {
 
     @GetMapping("/nomina/registrar")
     public String nominaPage(Model model, Authentication auth, @RequestParam String rfc) {
-        var admin = empleadoService.buscarPorRFC(auth.getName());
-        model.addAttribute("admin", admin);
+        model.addAttribute("admin", auth.getName());
         var empleado = empleadoService.buscarPorRFC(rfc);
         model.addAttribute("empleado", empleado);
         return "admin/nomina";
@@ -54,10 +51,9 @@ public class AdminController {
     public String calcularNomina(Model model, Authentication auth, @Valid NominaRequest req, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            var admin = empleadoService.buscarPorRFC(auth.getName());
             var empleado = empleadoService.buscarPorRFC(req.rfc());
 
-            model.addAttribute("admin", admin);
+            model.addAttribute("admin", auth.getName());
             model.addAttribute("empleado", empleado);
 
             model.addAttribute("error", "Uno o más campos contienen errores");
@@ -90,8 +86,7 @@ public class AdminController {
 
     @GetMapping("/error/notfound")
     public String empleadoNotFound(Model model, Authentication auth) {
-        var admin = empleadoService.buscarPorRFC(auth.getName());
-        model.addAttribute("admin", admin);
+        model.addAttribute("admin", auth.getName());
         return "admin/not_found";
     }
 
