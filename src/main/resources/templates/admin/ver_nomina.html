@@ -77,7 +77,7 @@
                     <td th:text="${#numbers.formatCurrency(nomina.cuotaFija + nomina.excedenteSobreLimiteInferior * nomina.porcentajeSobreExcedente)}"></td>
                     <td th:text="${#numbers.formatCurrency(nomina.salarioBruto - (nomina.cuotaFija + nomina.excedenteSobreLimiteInferior * nomina.porcentajeSobreExcedente))}"></td>
                     <td>
-                        <form th:method="post" th:action="@{'/admin/empleado/' + ${empleado.rfc} + '/nomina/' + ${nomina.id} + '/eliminar'}">
+                        <form th:method="post" th:action="@{'/admin/nomina/' + ${nomina.id} + '/eliminar'}">
                             <button class="btn btn-danger" type="submit">Eliminar</button>
                         </form>
                     </td>

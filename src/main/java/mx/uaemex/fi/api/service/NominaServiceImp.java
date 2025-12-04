@@ -3,6 +3,7 @@ package mx.uaemex.fi.api.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mx.uaemex.fi.api.dto.NominaRequest;
+import mx.uaemex.fi.api.exception.NotFoundException;
 import mx.uaemex.fi.api.model.Nomina;
 import mx.uaemex.fi.api.repository.EmpleadoRepository;
 import mx.uaemex.fi.api.repository.NominaRepository;
@@ -17,7 +18,10 @@ public class NominaServiceImp implements NominaService {
 
     @Transactional
     @Override
-    public void generarNomina(NominaRequest request) {
+    public void generarNomina(NominaRequest request) throws NotFoundException {
+        if (!empleadoRepository.existsByRfc(request.rfc()))
+            throw new NotFoundException("Empleado no encontrado");
+
         var empleado = empleadoRepository.findByRfc(request.rfc());
 
         var nomina = Nomina.builder()
@@ -36,7 +40,14 @@ public class NominaServiceImp implements NominaService {
     }
 
     @Override
-    public void eliminarNomina(Integer id) {
+    public void eliminarNomina(Integer id) throws NotFoundException {
+        if (!nominaRepository.existsById(id))
+            throw new NotFoundException("Nómina no encontrada");
         nominaRepository.deleteById(id);
+    }
+
+    @Override
+    public Nomina obtenerNomina(Integer id) throws NotFoundException {
+        return nominaRepository.findById(id).orElseThrow(() -> new NotFoundException("Nómina no encontrada"));
     }
 }

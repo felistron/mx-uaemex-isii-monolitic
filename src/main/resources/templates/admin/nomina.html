@@ -38,7 +38,7 @@
             </div>
         </section>
         <section class="w-50 m-auto my-4">
-            <form class="flex flex-column gap-4" th:method="post" th:action="@{'/admin/empleado/' + ${empleado.rfc} + '/nomina/registrar'}">
+            <form class="flex flex-column gap-4" th:method="post" th:action="@{'/admin/nomina/registrar'}">
                 <h2>Información básica</h2>
                 <div>
                     <label class="form-label" for="rfc">RFC</label>

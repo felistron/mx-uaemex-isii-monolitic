@@ -52,8 +52,8 @@
                         <td th:text="${empleado.correo}"></td>
                         <td th:text="${empleado.getAcceso()} ? 'Si' : 'No'"></td>
                         <td>
-                            <a class="btn btn-primary" th:href="@{'/admin/empleado/' + ${empleado.rfc} + '/nomina/registrar'}" role="button">Calcular nómina</a>
-                            <a class="btn btn-secondary" th:href="@{'/admin/empleado/' + ${empleado.rfc} + '/nomina'}" role="button">Consultar nóminas</a>
+                            <a class="btn btn-primary" th:href="@{'/admin/nomina/registrar?rfc=' + ${empleado.rfc}}" role="button">Calcular nómina</a>
+                            <a class="btn btn-secondary" th:href="@{'/admin/nomina/consultar?rfc=' + ${empleado.rfc}}" role="button">Consultar nóminas</a>
                         </td>
                     </tr>
                 </tbody>

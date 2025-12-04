@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mx.uaemex.fi.api.dto.NominaRequest;
+import mx.uaemex.fi.api.exception.NotFoundException;
 import mx.uaemex.fi.api.service.EmpleadoService;
 import mx.uaemex.fi.api.service.NominaService;
 import org.springframework.http.MediaType;
@@ -11,10 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin")
@@ -33,8 +32,8 @@ public class AdminController {
         return "admin/dashboard";
     }
 
-    @GetMapping("/empleado/{rfc}/nomina")
-    public String verNomina(Model model, Authentication auth, @PathVariable String rfc) {
+    @GetMapping("/nomina/consultar")
+    public String verNomina(Model model, Authentication auth, @RequestParam String rfc) {
         var admin = empleadoService.buscarPorRFC(auth.getName());
         model.addAttribute("admin", admin);
         var empleado = empleadoService.buscarPorRFC(rfc);
@@ -42,8 +41,8 @@ public class AdminController {
         return "admin/ver_nomina";
     }
 
-    @GetMapping("/empleado/{rfc}/nomina/registrar")
-    public String nominaPage(Model model, Authentication auth, @PathVariable String rfc) {
+    @GetMapping("/nomina/registrar")
+    public String nominaPage(Model model, Authentication auth, @RequestParam String rfc) {
         var admin = empleadoService.buscarPorRFC(auth.getName());
         model.addAttribute("admin", admin);
         var empleado = empleadoService.buscarPorRFC(rfc);
@@ -51,12 +50,14 @@ public class AdminController {
         return "admin/nomina";
     }
 
-    @PostMapping(value = "/empleado/{rfc}/nomina/registrar", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String calcularNomina(Model model, @Valid NominaRequest req, BindingResult bindingResult) {
+    @PostMapping(value = "/nomina/registrar", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String calcularNomina(Model model, Authentication auth, @Valid NominaRequest req, BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
-            var admin = empleadoService.buscarPorRFC(req.rfc());
-            model.addAttribute("admin", admin);
+            var admin = empleadoService.buscarPorRFC(auth.getName());
             var empleado = empleadoService.buscarPorRFC(req.rfc());
+
+            model.addAttribute("admin", admin);
             model.addAttribute("empleado", empleado);
 
             model.addAttribute("error", "Uno o más campos contienen errores");
@@ -79,13 +80,28 @@ public class AdminController {
         return "redirect:/admin/dashboard";
     }
 
-    @PostMapping("/empleado/{rfc}/nomina/{id}/eliminar")
-    public String eliminarNomina(@PathVariable String rfc, @PathVariable Integer id) {
-        try {
-            nominaService.eliminarNomina(id);
-        } catch (Exception e) {
-            log.error("Error al eliminar nomina", e);
-        }
-        return "redirect:/admin/empleado/" + rfc + "/nomina";
+    @PostMapping("/nomina/{id}/eliminar")
+    public String eliminarNomina(@PathVariable Integer id) {
+        var nomina = nominaService.obtenerNomina(id);
+        var rfc = nomina.getEmpleado().getRfc();
+        nominaService.eliminarNomina(id);
+        return "redirect:/admin/nomina/consultar?rfc=" + rfc;
+    }
+
+    @GetMapping("/error/notfound")
+    public String empleadoNotFound(Model model, Authentication auth) {
+        var admin = empleadoService.buscarPorRFC(auth.getName());
+        model.addAttribute("admin", admin);
+        return "admin/not_found";
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public String handleMissingParams() {
+        return "redirect:/admin/error/notfound";
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public String handleNotFoundException() {
+        return "redirect:/admin/error/notfound";
     }
 }
