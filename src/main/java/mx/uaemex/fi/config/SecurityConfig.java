@@ -1,8 +1,8 @@
 package mx.uaemex.fi.config;
 
 import lombok.RequiredArgsConstructor;
-import mx.uaemex.fi.filter.JwtAuthenticationFilter;
-import mx.uaemex.fi.service.CustomUserDetailsService;
+import mx.uaemex.fi.presentation.filter.JwtAuthenticationFilter;
+import mx.uaemex.fi.domain.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

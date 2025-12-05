@@ -1,8 +1,8 @@
 package mx.uaemex.fi.util;
 
-import mx.uaemex.fi.model.Acceso;
-import mx.uaemex.fi.model.Empleado;
-import mx.uaemex.fi.model.Nomina;
+import mx.uaemex.fi.persistence.model.Acceso;
+import mx.uaemex.fi.persistence.model.Empleado;
+import mx.uaemex.fi.persistence.model.Nomina;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

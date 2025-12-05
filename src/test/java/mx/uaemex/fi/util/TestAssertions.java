@@ -1,7 +1,7 @@
 package mx.uaemex.fi.util;
 
-import mx.uaemex.fi.model.Empleado;
-import mx.uaemex.fi.model.Nomina;
+import mx.uaemex.fi.persistence.model.Empleado;
+import mx.uaemex.fi.persistence.model.Nomina;
 
 import static org.junit.jupiter.api.Assertions.*;
 
