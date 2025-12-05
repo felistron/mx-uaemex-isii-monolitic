@@ -1,0 +1,258 @@
+@startuml Diagrama de Clases - Capa de Presentación
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam backgroundColor #FEFEFE
+skinparam packageStyle rectangle
+
+title Diagrama de Clases - Capa de Presentación\nSistema de Nómina UAEMex
+
+package "mx.uaemex.fi.presentation.controller" {
+
+    class AuthController <<Controller>> {
+        - authService : AuthService
+        --
+        + registrarPage() : String
+        + registrar(model: Model, request: RegisterRequest, bindingResult: BindingResult) : String
+        + loginPage(model: Model, tokenError: Boolean) : String
+        + login(response: HttpServletResponse, model: Model, request: LoginRequest) : String
+        + logout(response: HttpServletResponse) : String
+    }
+
+    class AdminController <<Controller>> {
+        - empleadoService : EmpleadoService
+        - nominaService : NominaService
+        --
+        + dashboardPage(auth: Authentication, model: Model) : String
+        + verNomina(model: Model, auth: Authentication, rfc: String) : String
+        + nominaPage(model: Model, auth: Authentication, rfc: String) : String
+        + calcularNomina(model: Model, auth: Authentication, req: NominaRequest, bindingResult: BindingResult) : String
+        + eliminarNomina(id: Integer) : String
+        + empleadoNotFound(model: Model, auth: Authentication) : String
+        + handleMissingParams() : String
+        + handleNotFoundException() : String
+    }
+}
+
+package "mx.uaemex.fi.presentation.dto" {
+
+    class RegisterRequest <<Record>> {
+        + rfc : String {UniqueRFC, Pattern, NotNull}
+        + nombre : String {Pattern, NotNull}
+        + apellidos : String {Pattern, NotNull}
+        + correo : String {UniqueEmail, Email, NotNull}
+        + esAdministrador : Boolean
+        + password : String
+        + confirmPassword : String
+        --
+        <<ConditionalPassword>>
+    }
+
+    class LoginRequest <<Record>> {
+        + correo : String
+        + password : String
+    }
+
+    class NominaRequest <<Record>> {
+        + rfc : String {RFCExists, NotNull}
+        + salario : Float {DecimalMin, NotNull}
+        + fechaInicio : LocalDate {NotNull}
+        + fechaFin : LocalDate {NotNull}
+        --
+        <<Periodo>>
+    }
+
+    class JwtResponse <<Record>> {
+        + token : String
+        + type : String
+        + expiresIn : Long
+    }
+
+    class EmpleadoResponse <<Record>> {
+        + rfc : String
+        + nombre : String
+        + apellidos : String
+        + correo : String
+    }
+}
+
+package "mx.uaemex.fi.presentation.filter" {
+
+    class JwtAuthenticationFilter <<Filter>> {
+        - jwtService : JwtService
+        - userDetailsService : CustomUserDetailsService
+        --
+        # shouldNotFilter(request: HttpServletRequest) : boolean
+        # doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) : void
+        - getJwtFromCookies(cookies: Cookie[]) : String
+    }
+
+    class OncePerRequestFilter <<Spring>> {
+        # shouldNotFilter(request: HttpServletRequest) : boolean
+        # doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) : void
+    }
+}
+
+package "mx.uaemex.fi.logic.service" {
+    interface AuthService <<Service>>
+    interface EmpleadoService <<Service>>
+    interface NominaService <<Service>>
+    interface JwtService <<Service>>
+    interface CustomUserDetailsService <<Service>>
+}
+
+package "org.springframework" {
+    interface Model <<Spring MVC>>
+    interface BindingResult <<Spring MVC>>
+    interface Authentication <<Spring Security>>
+    interface HttpServletRequest <<Servlet>>
+    interface HttpServletResponse <<Servlet>>
+    interface FilterChain <<Servlet>>
+}
+
+' Relaciones de Controladores con Servicios
+AuthController --> AuthService : usa
+AdminController --> EmpleadoService : usa
+AdminController --> NominaService : usa
+JwtAuthenticationFilter --> JwtService : usa
+JwtAuthenticationFilter --> CustomUserDetailsService : usa
+
+' Relaciones de Controladores con DTOs
+AuthController ..> RegisterRequest : recibe
+AuthController ..> LoginRequest : recibe
+AdminController ..> NominaRequest : recibe
+
+' DTOs usados por servicios
+AuthService ..> JwtResponse : retorna
+AuthService ..> EmpleadoResponse : retorna
+
+' Herencia de filtro
+JwtAuthenticationFilter --|> OncePerRequestFilter
+
+' Uso de APIs Spring
+AuthController ..> Model : usa
+AuthController ..> BindingResult : usa
+AuthController ..> HttpServletResponse : usa
+AdminController ..> Model : usa
+AdminController ..> BindingResult : usa
+AdminController ..> Authentication : usa
+JwtAuthenticationFilter ..> HttpServletRequest : usa
+JwtAuthenticationFilter ..> HttpServletResponse : usa
+JwtAuthenticationFilter ..> FilterChain : usa
+
+note top of AuthController
+  **@Controller @RequestMapping("/auth")**
+  **@RequiredArgsConstructor @Slf4j**
+
+  Responsabilidades:
+  • Gestión de autenticación
+  • Registro de usuarios
+  • Login y logout
+  • Manejo de sesiones con cookies JWT
+  • Validación de formularios
+
+  Endpoints:
+  • GET /auth/registrar
+  • POST /auth/registrar
+  • GET /auth/login
+  • POST /auth/login
+  • POST /auth/logout
+end note
+
+note top of AdminController
+  **@Controller @RequestMapping("/admin")**
+  **@RequiredArgsConstructor @Slf4j**
+
+  Responsabilidades:
+  • Dashboard de administrador
+  • CRUD de nóminas
+  • Consulta de empleados
+  • Validación de formularios
+  • Manejo de excepciones
+
+  Endpoints:
+  • GET /admin/dashboard
+  • GET /admin/nomina/consultar?rfc=...
+  • GET /admin/nomina/registrar?rfc=...
+  • POST /admin/nomina/registrar
+  • POST /admin/nomina/{id}/eliminar
+  • GET /admin/error/notfound
+
+  **Requiere autenticación ROLE_ADMIN**
+end note
+
+note top of JwtAuthenticationFilter
+  **@Component @RequiredArgsConstructor**
+  **extends OncePerRequestFilter**
+
+  Responsabilidades:
+  • Interceptar requests HTTP
+  • Extraer JWT de cookies
+  • Validar tokens JWT
+  • Establecer contexto de seguridad
+  • Redirigir a login si token inválido
+
+  Rutas excluidas:
+  • /auth/** (login, registro)
+  • /css/**, /js/**, /images/**
+  • /favicon.ico
+end note
+
+note top of RegisterRequest
+  **Java Record (immutable)**
+
+  Validaciones:
+  • @UniqueRFC - RFC único en BD
+  • @UniqueEmail - Correo único en BD
+  • @Pattern - Formato RFC, nombre, apellidos
+  • @Email - Formato válido de correo
+  • @ConditionalPassword - Password condicional
+
+  Password solo requerido si esAdministrador=true
+end note
+
+note top of NominaRequest
+  **Java Record (immutable)**
+
+  Validaciones:
+  • @RFCExists - RFC debe existir en BD
+  • @DecimalMin - Salario > 0.01
+  • @NotNull - Todos los campos obligatorios
+  • @Periodo - fechaInicio < fechaFin
+end note
+
+note right of LoginRequest
+  **Java Record (immutable)**
+  Sin validaciones (validación
+  en servicio de autenticación)
+end note
+
+note right of JwtResponse
+  **Java Record (immutable)**
+  Respuesta con token JWT
+  y tiempo de expiración
+end note
+
+note right of EmpleadoResponse
+  **Java Record (immutable)**
+  DTO de respuesta sin
+  información sensible
+end note
+
+legend right
+  |= Símbolo |= Significado |
+  | <<Controller>> | Controlador Spring MVC |
+  | <<Filter>> | Filtro Servlet |
+  | <<Record>> | Java Record (DTO inmutable) |
+  | <<Service>> | Servicio de lógica de negocio |
+  | --> | Usa/Depende de |
+  | ..> | Usa temporalmente |
+  | --|> | Hereda de |
+
+  **Patrón:** MVC (Model-View-Controller)
+  **View Engine:** Thymeleaf
+  **Validación:** Jakarta Bean Validation
+  **Seguridad:** Spring Security + JWT
+endlegend
+
+@enduml
+

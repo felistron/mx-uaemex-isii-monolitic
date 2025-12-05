@@ -158,6 +158,22 @@ Gestiona el acceso y persistencia de datos:
 - **Builder Pattern**: Construcción de objetos complejos (Lombok @Builder)
 - **Singleton Pattern**: Gestión de beans Spring (por defecto)
 
+### Diagramas UML
+
+El proyecto incluye **5 diagramas UML completos** en formato PlantUML que documentan toda la arquitectura:
+
+1. **Diagrama Entidad-Relación** - Modelo de datos del sistema
+2. **Diagrama de Clases - Capa de Persistencia** - Entidades JPA y Repositorios
+3. **Diagrama de Clases - Capa de Servicios** - Service Layer y lógica de negocio
+4. **Diagrama de Clases - Capa de Lógica de Negocio** - Validadores y Excepciones
+5. **Diagrama de Clases - Capa de Presentación** - Controladores, DTOs y Filtros
+
+**📊 Accede a los diagramas en:** [docs/uml/images](docs/uml/images)
+
+Los diagramas pueden visualizarse usando:
+- PlantUML Online Server: https://www.plantuml.com/plantuml/uml/
+- Extensión PlantUML para VS Code o IntelliJ IDEA
+
 ---
 
 ## Pruebas
@@ -367,8 +383,19 @@ Este proyecto fue desarrollado para la clase de Ingeniería de Software II impar
 
 ## Documentación Adicional
 
-- [RESUMEN-DE-PRUEBAS.md](docs/RESUMEN-DE-PRUEBAS.md) - Documentación completa de pruebas y cobertura
-- [README-DOCKER.md](docs/README-DOCKER.md) - Guía completa de despliegue con Docker
+### Documentación Técnica
+- **[Diagramas UML](docs/uml/README.md)** - 5 diagramas completos de arquitectura en PlantUML
+  - Diagrama Entidad-Relación
+  - Diagrama de Clases - Capa de Persistencia
+  - Diagrama de Clases - Capa de Servicios
+  - Diagrama de Clases - Capa de Lógica de Negocio
+  - Diagrama de Clases - Capa de Presentación
+
+### Documentación de Calidad
+- **[RESUMEN-DE-PRUEBAS.md](docs/RESUMEN-DE-PRUEBAS.md)** - Documentación completa de pruebas y cobertura
+
+### Documentación de Despliegue
+- **[README-DOCKER.md](docs/README-DOCKER.md)** - Guía completa de despliegue con Docker
 
 ---
 
