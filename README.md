@@ -169,7 +169,7 @@ mvn clean test jacoco:report
 # El reporte se genera en: target/site/jacoco/index.html
 ```
 
-**Para más detalles sobre las pruebas, consulta [RESUMEN_DE_PRUEBAS.md](RESUMEN_DE_PRUEBAS.md)**
+**Para más detalles sobre las pruebas, consulta [RESUMEN-DE-PRUEBAS.md](docs/RESUMEN-DE-PRUEBAS.md)**
 
 ---
 
@@ -302,7 +302,7 @@ docker rm uaemex-nomina-app
 docker rmi uaemex-nomina:latest
 ```
 
-**Para una guía completa de Docker, consulta [README-DOCKER.md](README-DOCKER.md)**
+**Para una guía completa de Docker, consulta [README-DOCKER.md](docs/README-DOCKER.md)**
 
 ---
 
@@ -343,8 +343,8 @@ Este proyecto fue desarrollado para la clase de Ingeniería de Software II impar
 
 ## Documentación Adicional
 
-- [RESUMEN_DE_PRUEBAS.md](RESUMEN_DE_PRUEBAS.md) - Documentación completa de pruebas y cobertura
-- [README-DOCKER.md](README-DOCKER.md) - Guía completa de despliegue con Docker
+- [RESUMEN-DE-PRUEBAS.md](docs/RESUMEN-DE-PRUEBAS.md) - Documentación completa de pruebas y cobertura
+- [README-DOCKER.md](docs/README-DOCKER.md) - Guía completa de despliegue con Docker
 
 ---
 
