@@ -11,10 +11,6 @@ spring:
     mode: HTML
     encoding: UTF-8
     prefix: classpath:/templates/
-  resources:
-    static-locations: classpath:/static/
-    cache:
-      period: 31536000
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -30,3 +26,8 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+  web:
+    resources:
+      static-locations: classpath:/static/
+      cache:
+        period: 31536000
