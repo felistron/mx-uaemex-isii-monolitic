@@ -20,7 +20,7 @@ spring:
       enabled: true
       path: /admin/h2-console
   datasource:
-    url: jdbc:h2:mem:nomina
+    url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driverClassName: org.h2.Driver
