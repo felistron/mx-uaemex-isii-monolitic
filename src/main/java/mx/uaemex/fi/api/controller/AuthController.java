@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Objects;
-
 @Controller
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -42,18 +40,12 @@ public class AuthController {
 
             bindingResult.getFieldErrors().forEach(error -> model.addAttribute(error.getField() + "Error", error.getDefaultMessage()));
         } else {
-            try {
-                var res = authService.register(request);
-                model.addAttribute("res", res);
-                if (!Objects.isNull(request.esAdministrador()) && request.esAdministrador()) {
-                    model.addAttribute("admin", true);
-                }
-                return "auth/register";
+            var res = authService.register(request);
+            model.addAttribute("res", res);
+            if (Boolean.TRUE.equals(request.esAdministrador())) {
+                model.addAttribute("admin", true);
             }
-            catch (Exception e) {
-                log.error("Error inesperado al registrar el usuario", e);
-                model.addAttribute("error", "Ha ocurrido un error inesperado al registrar el empleado");
-            }
+            return "auth/register";
         }
 
         model.addAttribute("rfc", request.rfc());
@@ -85,12 +77,8 @@ public class AuthController {
             return "redirect:/admin/dashboard";
         } catch (InvalidCredentialsException e) {
             model.addAttribute("error", e.getMessage());
-        } catch (Exception e) {
-            log.error("Error al iniciar sesion", e);
-            model.addAttribute("error", "Ha ocurrido un error inesperado al iniciar sesion");
+            return "auth/login";
         }
-
-        return "auth/login";
     }
 
     @GetMapping("/logout")
