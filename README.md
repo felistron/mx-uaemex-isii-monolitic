@@ -56,76 +56,107 @@ Sistema de gestión de nómina. Esta aplicación monolítica proporciona funcion
 ## Arquitectura
 
 ### Arquitectura General
-El proyecto implementa una **arquitectura monolítica en capas** basada en el patrón **MVC (Modelo-Vista-Controlador)** con una estructura modular y organizada.
+El proyecto implementa una **arquitectura monolítica en capas** con una clara **separación de responsabilidades** entre la presentación, lógica de negocio y persistencia de datos. Esta estructura facilita el mantenimiento, testing y posible evolución hacia una arquitectura de microservicios.
 
 ### Capas de la Aplicación
 
 ```
-┌─────────────────────────────────────────────────┐
-│           CAPA DE PRESENTACIÓN                  │
-│  (Controllers + DTOs + Views/Thymeleaf)         │
-├─────────────────────────────────────────────────┤
-│           CAPA DE SEGURIDAD                     │
-│  (Filters + Security Config + JWT)              │
-├─────────────────────────────────────────────────┤
-│           CAPA DE NEGOCIO                       │
-│  (Services + Validation)                        │
-├─────────────────────────────────────────────────┤
-│           CAPA DE PERSISTENCIA                  │
-│  (Repositories + Models/Entities)               │
-├─────────────────────────────────────────────────┤
-│           CAPA DE BASE DE DATOS                 │
-│  (H2 Database)                                  │
-└─────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│         CAPA DE PRESENTACIÓN (presentation/)            │
+│  • Controladores REST/MVC                               │
+│  • DTOs (Data Transfer Objects)                         │
+│  • Filtros de seguridad (JWT)                           │
+│  • Vistas Thymeleaf                                     │
+├─────────────────────────────────────────────────────────┤
+│         CAPA DE LÓGICA DE NEGOCIO (logic/)              │
+│  • Servicios de negocio                                 │
+│  • Validadores personalizados                           │
+│  • Excepciones del dominio                              │
+│  • Reglas de negocio y cálculos                         │
+├─────────────────────────────────────────────────────────┤
+│         CAPA DE PERSISTENCIA (persistence/)             │
+│  • Entidades JPA (Models)                               │
+│  • Repositorios Spring Data JPA                         │
+│  • Mapeo objeto-relacional                              │
+├─────────────────────────────────────────────────────────┤
+│         CONFIGURACIÓN (config/)                         │
+│  • Spring Security Configuration                        │
+│  • Bean Definitions                                     │
+├─────────────────────────────────────────────────────────┤
+│         BASE DE DATOS                                   │
+│  • H2 Database (en memoria)                             │
+└─────────────────────────────────────────────────────────┘
 ```
+
+### Principios de Diseño Aplicados
+
+- **Separación de Responsabilidades (SoC)**: Cada capa tiene responsabilidades bien definidas
+- **Bajo Acoplamiento**: Las capas interactúan a través de interfaces bien definidas
+- **Alta Cohesión**: Los componentes relacionados están agrupados en la misma capa
+- **Inversión de Dependencias**: Las capas superiores dependen de abstracciones, no de implementaciones
 
 ### Estructura del Código
 
+La aplicación está organizada en tres capas principales que reflejan una clara separación de responsabilidades:
+
 ```
 src/main/java/mx/uaemex/fi/
-├── api/
-│   ├── controller/      # Controladores REST y MVC
-│   ├── dto/            # Objetos de transferencia de datos
-│   ├── exception/      # Excepciones personalizadas
-│   ├── filter/         # Filtros de seguridad (JWT)
-│   ├── model/          # Entidades del dominio
-│   ├── repository/     # Repositorios JPA
-│   ├── service/        # Lógica de negocio
-│   └── validation/     # Validadores personalizados
-├── config/             # Configuración de Spring Security y beans
-└── Main.java           # Punto de entrada de la aplicación
+├── presentation/          # CAPA DE PRESENTACIÓN
+│   ├── controller/        # Controladores REST y MVC
+│   ├── dto/              # Objetos de transferencia de datos
+│   └── filter/           # Filtros de seguridad (JWT)
+│
+├── logic/                # CAPA DE LÓGICA DE NEGOCIO
+│   ├── service/          # Servicios de negocio
+│   ├── validation/       # Validadores personalizados
+│   └── exception/        # Excepciones personalizadas
+│
+├── persistence/          # CAPA DE PERSISTENCIA
+│   ├── model/            # Entidades del dominio (JPA)
+│   └── repository/       # Repositorios JPA
+│
+├── config/               # Configuración de Spring Security y beans
+└── Main.java             # Punto de entrada de la aplicación
 ```
 
 ### Componentes Principales
 
-#### 1. **Capa de Presentación**
-- **Controladores**: Gestión de endpoints REST y vistas
-- **DTOs**: Objetos para transferencia de datos entre capas
-- **Vistas**: Plantillas Thymeleaf para interfaz web
+#### 1. **Capa de Presentación** (`presentation/`)
+Responsable de la interacción con el usuario y la exposición de servicios:
+- **Controladores** (`controller/`): Gestión de endpoints REST y vistas web
+- **DTOs** (`dto/`): Objetos para transferencia de datos entre capas
+- **Filtros** (`filter/`): Filtros de seguridad y procesamiento de peticiones (JWT)
 
-#### 2. **Capa de Seguridad**
-- **JwtAuthenticationFilter**: Filtro para validación de tokens JWT
+#### 2. **Capa de Lógica de Negocio** (`logic/`)
+Contiene toda la lógica de negocio y reglas de la aplicación:
+- **Servicios** (`service/`):
+  - **AuthService**: Lógica de autenticación y registro
+  - **EmpleadoService**: Gestión de empleados
+  - **NominaService**: Cálculo y gestión de nóminas
+  - **JwtService**: Generación y validación de tokens JWT
+  - **CustomUserDetailsService**: Servicio de autenticación de usuarios
+- **Validadores** (`validation/`): Validación de RFC, email, períodos, contraseñas, etc.
+- **Excepciones** (`exception/`): Excepciones personalizadas del dominio
+
+#### 3. **Capa de Persistencia** (`persistence/`)
+Gestiona el acceso y persistencia de datos:
+- **Modelos** (`model/`): Entidades JPA del dominio (Empleado, Nomina, Acceso)
+- **Repositorios** (`repository/`): Interfaces JPA para acceso a datos
+
+#### 4. **Configuración** (`config/`)
 - **Security Config**: Configuración de Spring Security
-- **UserDetailsService**: Servicio de autenticación de usuarios
-
-#### 3. **Capa de Negocio**
-- **AuthService**: Lógica de autenticación y registro
-- **EmpleadoService**: Gestión de empleados
-- **NominaService**: Cálculo y gestión de nóminas
-- **JwtService**: Generación y validación de tokens
-- **Validadores Personalizados**: Validación de RFC, email, períodos, etc.
-
-#### 4. **Capa de Persistencia**
-- **Repositories**: Interfaces JPA para acceso a datos
-- **Modelos**: Entidades JPA (Empleado, Nomina, Acceso)
+- **Bean Definitions**: Definición de beans del contenedor Spring
 
 ### Patrones de Diseño Utilizados
-- **MVC (Model-View-Controller)**: Separación de responsabilidades
+- **Arquitectura en Capas (Layered Architecture)**: Separación clara entre presentación, lógica y persistencia
+- **MVC (Model-View-Controller)**: Patrón para la capa de presentación
 - **DTO (Data Transfer Object)**: Transferencia de datos entre capas
-- **Repository Pattern**: Abstracción del acceso a datos
-- **Dependency Injection**: Inversión de control con Spring
-- **Filter Pattern**: Filtros para procesamiento de peticiones
+- **Repository Pattern**: Abstracción del acceso a datos en la capa de persistencia
+- **Service Layer Pattern**: Encapsulación de la lógica de negocio
+- **Dependency Injection**: Inversión de control con Spring IoC
+- **Filter Pattern**: Filtros para procesamiento de peticiones HTTP
 - **Builder Pattern**: Construcción de objetos complejos (Lombok @Builder)
+- **Singleton Pattern**: Gestión de beans Spring (por defecto)
 
 ---
 

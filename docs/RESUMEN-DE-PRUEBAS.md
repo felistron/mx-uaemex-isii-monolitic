@@ -27,20 +27,53 @@
 ### Distribución por Capa
 
 ```
-┌─────────────────┬──────────┬─────────┬─────────────┬─────────────────┐
-│ Capa            │ Archivos │ Pruebas │ Cobertura   │ Estado          │
-├─────────────────┼──────────┼─────────┼─────────────┼─────────────────┤
-│ Controladores   │    2     │   60    │ 98% ✅      │ Excelente       │
-│ Servicios       │    7     │   83    │ 100% ✅     │ Perfecto        │
-│ Validadores     │    5     │   27    │ 100% ✅     │ Perfecto        │
-│ Filtros         │    1     │   11    │ 82% ✅      │ Bueno           │
-│ DTOs            │    5     │   10    │ 100% ✅     │ Perfecto        │
-│ Modelos         │    3     │   15    │ N/A         │ Completo        │
-│ Excepciones     │    2     │    6    │ 100% ✅     │ Perfecto        │
-└─────────────────┴──────────┴─────────┴─────────────┴─────────────────┘
+┌──────────────────────┬──────────┬─────────┬─────────────┬─────────────────┐
+│ Capa                 │ Archivos │ Pruebas │ Cobertura   │ Estado          │
+├──────────────────────┼──────────┼─────────┼─────────────┼─────────────────┤
+│ PRESENTACIÓN         │    8     │   81    │ 96% ✅      │ Excelente       │
+│   Controladores      │    2     │   60    │ 98% ✅      │ Excelente       │
+│   DTOs               │    5     │   10    │ 100% ✅     │ Perfecto        │
+│   Filtros            │    1     │   11    │ 82% ✅      │ Bueno           │
+├──────────────────────┼──────────┼─────────┼─────────────┼─────────────────┤
+│ LÓGICA DE NEGOCIO    │   14     │  125    │ 100% ✅     │ Perfecto        │
+│   Servicios          │    7     │   83    │ 100% ✅     │ Perfecto        │
+│   Validadores        │    5     │   27    │ 100% ✅     │ Perfecto        │
+│   Excepciones        │    2     │    6    │ 100% ✅     │ Perfecto        │
+├──────────────────────┼──────────┼─────────┼─────────────┼─────────────────┤
+│ PERSISTENCIA         │    3     │   15    │ N/A         │ Completo        │
+│   Modelos            │    3     │   15    │ N/A         │ Completo        │
+└──────────────────────┴──────────┴─────────┴─────────────┴─────────────────┘
 
-TOTAL:              25        221       97% ✅        COMPLETADO
+TOTAL:                   25        221       97% ✅        COMPLETADO
 ```
+
+### Organización de Pruebas por Arquitectura
+
+El proyecto de pruebas refleja la misma arquitectura en capas del código de producción:
+
+```
+src/test/java/mx/uaemex/fi/
+├── presentation/          # Pruebas de la capa de presentación
+│   ├── controller/        # AdminControllerTest, AuthControllerTest
+│   ├── dto/              # Tests de DTOs (RegisterRequest, LoginRequest, etc.)
+│   └── filter/           # JwtAuthenticationFilterTest
+│
+├── logic/                # Pruebas de la capa de lógica de negocio
+│   ├── service/          # Tests de servicios (Auth, Nomina, Empleado, JWT, etc.)
+│   ├── validation/       # Tests de validadores personalizados
+│   └── exception/        # Tests de excepciones del dominio
+│
+├── persistence/          # Pruebas de la capa de persistencia
+│   └── model/            # Tests de entidades (Empleado, Nomina, Acceso)
+│
+└── util/                 # Utilidades para pruebas
+```
+
+**Beneficios de esta organización:**
+- ✅ Fácil localización de pruebas por funcionalidad
+- ✅ Separación clara de responsabilidades en las pruebas
+- ✅ Facilita el mantenimiento y evolución del código de pruebas
+- ✅ Refleja la arquitectura real del sistema
 
 ---
 
@@ -134,7 +167,7 @@ TOTAL:              25        221       97% ✅        COMPLETADO
 ### Controladores (60 pruebas)
 
 #### AdminControllerTest.java (34 pruebas)
-**Ubicación**: `src/test/java/mx/uaemex/fi/api/controller/AdminControllerTest.java`
+**Ubicación**: `src/test/java/mx/uaemex/fi/presentation/controller/AdminControllerTest.java`
 
 **Pruebas Clave**:
 - Dashboard muestra lista de empleados autenticado
@@ -151,7 +184,7 @@ TOTAL:              25        221       97% ✅        COMPLETADO
 **Cobertura**: 98% instrucciones
 
 #### AuthControllerTest.java (26 pruebas)
-**Ubicación**: `src/test/java/mx/uaemex/fi/api/controller/AuthControllerTest.java`
+**Ubicación**: `src/test/java/mx/uaemex/fi/presentation/controller/AuthControllerTest.java`
 
 **Pruebas Clave**:
 - Mostrar página de login
@@ -167,7 +200,7 @@ TOTAL:              25        221       97% ✅        COMPLETADO
 
 **Cobertura**: 98% instrucciones
 
-### 🔧 Servicios (83 pruebas)
+### Servicios (83 pruebas)
 
 #### AuthServiceImpTest.java (9 pruebas)
 - Login con credenciales válidas retorna JWT
@@ -382,17 +415,20 @@ Incluye pruebas para:
 
 ### Cobertura por Paquete
 
-| Paquete                     | Instrucciones         | Ramas             | Complejidad       | Líneas            | Métodos         | Clases           |
-|-----------------------------|-----------------------|-------------------|-------------------|-------------------|-----------------|------------------|
-| **mx.uaemex.fi.controller** | 98% (314/320)         | 87% (7/8)         | 95% (21/22)       | 100% (70/70)      | 100% (18/18)    | 100% (2/2)       |
-| **mx.uaemex.fi.service**    | 100% (862/862)        | 77% (109/140)     | 68% (67/98)       | 100% (159/159)    | 100% (28/28)    | 100% (7/7)       |
-| **mx.uaemex.fi.validation** | 100% (138/138)        | 96% (29/30)       | 95% (22/23)       | 100% (40/40)      | 100% (8/8)      | 100% (5/5)       |
-| **mx.uaemex.fi.filter**     | 82% (120/145)         | 84% (22/26)       | 76% (13/17)       | 89% (34/38)       | 100% (4/4)      | 100% (1/1)       |
-| **mx.uaemex.fi.dto**        | 100% (78/78)          | N/A               | 100% (5/5)        | 100% (5/5)        | 100% (5/5)      | 100% (5/5)       |
-| **mx.uaemex.fi.exception**  | 100% (8/8)            | N/A               | 100% (2/2)        | 100% (4/4)        | 100% (2/2)      | 100% (2/2)       |
-| **mx.uaemex.fi.config**     | 100% (122/122)        | N/A               | 100% (10/10)      | 100% (28/28)      | 100% (10/10)    | 100% (2/2)       |
-| **mx.uaemex.fi (Main)**     | 37% (6/16)            | N/A               | 50% (1/2)         | 33% (1/3)         | 50% (1/2)       | 100% (1/1)       |
-| **TOTAL GLOBAL**            | **97%** (1,648/1,696) | **81%** (167/204) | **78%** (141/179) | **98%** (341/347) | **98%** (76/77) | **100%** (25/25) |
+| Paquete                                   | Instrucciones         | Ramas             | Complejidad       | Líneas            | Métodos         | Clases           |
+|-------------------------------------------|-----------------------|-------------------|-------------------|-------------------|-----------------|------------------|
+| **CAPA DE PRESENTACIÓN**                  |                       |                   |                   |                   |                 |                  |
+| mx.uaemex.fi.presentation.controller      | 98% (314/320)         | 87% (7/8)         | 95% (21/22)       | 100% (70/70)      | 100% (18/18)    | 100% (2/2)       |
+| mx.uaemex.fi.presentation.dto             | 100% (78/78)          | N/A               | 100% (5/5)        | 100% (5/5)        | 100% (5/5)      | 100% (5/5)       |
+| mx.uaemex.fi.presentation.filter          | 82% (120/145)         | 84% (22/26)       | 76% (13/17)       | 89% (34/38)       | 100% (4/4)      | 100% (1/1)       |
+| **CAPA DE LÓGICA DE NEGOCIO**             |                       |                   |                   |                   |                 |                  |
+| mx.uaemex.fi.logic.service                | 100% (862/862)        | 77% (109/140)     | 68% (67/98)       | 100% (159/159)    | 100% (28/28)    | 100% (7/7)       |
+| mx.uaemex.fi.logic.validation             | 100% (138/138)        | 96% (29/30)       | 95% (22/23)       | 100% (40/40)      | 100% (8/8)      | 100% (5/5)       |
+| mx.uaemex.fi.logic.exception              | 100% (8/8)            | N/A               | 100% (2/2)        | 100% (4/4)        | 100% (2/2)      | 100% (2/2)       |
+| **CONFIGURACIÓN Y PRINCIPAL**             |                       |                   |                   |                   |                 |                  |
+| mx.uaemex.fi.config                       | 100% (122/122)        | N/A               | 100% (10/10)      | 100% (28/28)      | 100% (10/10)    | 100% (2/2)       |
+| mx.uaemex.fi (Main)                       | 37% (6/16)            | N/A               | 50% (1/2)         | 33% (1/3)         | 50% (1/2)       | 100% (1/1)       |
+| **TOTAL GLOBAL**                          | **97%** (1,648/1,696) | **81%** (167/204) | **78%** (141/179) | **98%** (341/347) | **98%** (76/77) | **100%** (25/25) |
 
 ### Áreas con Cobertura Perfecta (100%)
 
