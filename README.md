@@ -383,6 +383,14 @@ Este proyecto fue desarrollado para la clase de Ingeniería de Software II impar
 
 ## Documentación Adicional
 
+### Documentación para Usuarios
+- **[📘 MANUAL-DE-USUARIO.md](docs/MANUAL-DE-USUARIO.md)** - Manual completo para personal de Recursos Humanos
+  - Guía paso a paso de todas las funcionalidades
+  - Ejemplos prácticos y casos de uso
+  - Solución de problemas comunes
+  - Preguntas frecuentes
+  - Glosario de términos
+
 ### Documentación Técnica
 - **[Diagramas UML](docs/uml/README.md)** - 5 diagramas completos de arquitectura en PlantUML
   - Diagrama Entidad-Relación
