@@ -265,13 +265,6 @@ Una vez iniciada la aplicación, estará disponible en:
 http://localhost:8080
 ```
 
-#### Endpoints de Actuator
-
-```
-http://localhost:8080/actuator
-http://localhost:8080/actuator/health
-```
-
 ---
 
 ## Despliegue con Docker
