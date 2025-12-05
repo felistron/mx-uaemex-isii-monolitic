@@ -3,9 +3,9 @@ package mx.uaemex.fi.presentation.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import mx.uaemex.fi.domain.validation.ConditionalPassword;
-import mx.uaemex.fi.domain.validation.UniqueEmail;
-import mx.uaemex.fi.domain.validation.UniqueRFC;
+import mx.uaemex.fi.logic.validation.ConditionalPassword;
+import mx.uaemex.fi.logic.validation.UniqueEmail;
+import mx.uaemex.fi.logic.validation.UniqueRFC;
 
 @ConditionalPassword(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{12,}$")
 public record RegisterRequest(

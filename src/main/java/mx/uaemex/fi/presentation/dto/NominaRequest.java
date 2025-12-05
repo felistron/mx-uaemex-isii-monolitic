@@ -2,8 +2,8 @@ package mx.uaemex.fi.presentation.dto;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
-import mx.uaemex.fi.domain.validation.Periodo;
-import mx.uaemex.fi.domain.validation.RFCExists;
+import mx.uaemex.fi.logic.validation.Periodo;
+import mx.uaemex.fi.logic.validation.RFCExists;
 
 import java.time.LocalDate;
 

@@ -1,15 +1,15 @@
 package mx.uaemex.fi.presentation.controller;
 
-import mx.uaemex.fi.domain.exception.NotFoundException;
+import mx.uaemex.fi.logic.exception.NotFoundException;
 import mx.uaemex.fi.persistence.model.Empleado;
 import mx.uaemex.fi.persistence.model.Nomina;
 import mx.uaemex.fi.persistence.repository.EmpleadoRepository;
-import mx.uaemex.fi.domain.service.CustomUserDetailsService;
-import mx.uaemex.fi.domain.service.EmpleadoService;
-import mx.uaemex.fi.domain.service.JwtServiceImp;
-import mx.uaemex.fi.domain.service.NominaService;
-import mx.uaemex.fi.domain.validation.PeriodoValidator;
-import mx.uaemex.fi.domain.validation.RFCExistsValidator;
+import mx.uaemex.fi.logic.service.CustomUserDetailsService;
+import mx.uaemex.fi.logic.service.EmpleadoService;
+import mx.uaemex.fi.logic.service.JwtServiceImp;
+import mx.uaemex.fi.logic.service.NominaService;
+import mx.uaemex.fi.logic.validation.PeriodoValidator;
+import mx.uaemex.fi.logic.validation.RFCExistsValidator;
 import mx.uaemex.fi.config.SecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
