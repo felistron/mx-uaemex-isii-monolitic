@@ -66,6 +66,19 @@ Detalla la capa de presentación (Controllers + DTOs + Filters):
 
 ---
 
+### 6. Diagrama de Despliegue
+**Archivo:** `06-diagrama-despliegue.puml`
+
+Muestra la arquitectura de despliegue del sistema:
+- **Nodos de infraestructura**: Cliente (navegador), Servidor de aplicaciones, Base de datos
+- **Componentes de software**: Spring Boot, Tomcat, JVM, H2 Database
+- **Protocolos de comunicación**: HTTP/HTTPS, JDBC
+- **Configuración de despliegue**: Docker (opcional), variables de entorno
+- **Especificaciones de hardware**: CPU, RAM, Disco
+- **Puertos**: 8080 (aplicación), H2 Console
+
+---
+
 ## Herramientas para Visualizar los Diagramas
 
 ### Opción 1: PlantUML Online Server
@@ -168,7 +181,10 @@ plantuml *.puml
 **Versión**: 1.0-SNAPSHOT  
 **Fecha de Creación**: 5 de diciembre de 2025  
 **Formato**: PlantUML (.puml)  
-**Total de Diagramas**: 5  
+**Total de Diagramas**: 6  
+
+**Categorías de Diagramas:**
+- Diagramas de Estructura: 6 (Entidad-Relación, Clases x4, Despliegue)
 
 ---
 

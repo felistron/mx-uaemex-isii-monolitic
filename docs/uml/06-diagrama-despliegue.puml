@@ -1,0 +1,162 @@
+@startuml Diagrama de Despliegue
+!theme plain
+skinparam backgroundColor #FEFEFE
+
+title Diagrama de Despliegue\nSistema de Gestión de Nómina UAEMex
+
+' Nodos de infraestructura
+node "Cliente (Navegador Web)" as client {
+    artifact "Navegador Web" as browser {
+        component "HTML/CSS/JS" as frontend
+    }
+}
+
+node "Servidor de Aplicaciones" as appserver {
+    artifact "Spring Boot App" as springboot {
+        component "Tomcat Embebido\n(Puerto 8080)" as tomcat
+
+        package "Aplicación Java" {
+            component "Presentation Layer" as presentation
+            component "Logic Layer" as logic
+            component "Persistence Layer" as persistence
+        }
+    }
+
+    artifact "JVM" as jvm {
+        note right
+            Java 17
+            Spring Boot 3.5.6
+        end note
+    }
+}
+
+node "Base de Datos" as dbserver {
+    database "H2 Database" as h2db {
+        folder "In-Memory" as inmemory {
+            storage "empleado" as emp_table
+            storage "acceso" as acc_table
+            storage "nomina" as nom_table
+        }
+    }
+}
+
+' Opción Docker
+node "Contenedor Docker" as docker <<optional>> {
+    artifact "uaemex-nomina:latest" as dockerimage {
+        component "Spring Boot App\n+ JRE 17" as dockerapp
+    }
+}
+
+' Nodo de desarrollo (opcional)
+cloud "Entorno de Desarrollo" as devenv <<optional>> {
+    node "IDE Developer" as ide {
+        component "IntelliJ IDEA\no VS Code" as devide
+    }
+}
+
+' Protocolos y conexiones
+client -down-> appserver : "HTTP/HTTPS\n(Puerto 8080)"
+frontend --> tomcat : "Request/Response"
+tomcat --> presentation : "MVC"
+presentation --> logic : "Service Calls"
+logic --> persistence : "Repository Pattern"
+persistence --> h2db : "JDBC\nHibernate/JPA"
+
+springboot ..> jvm : "<<runs on>>"
+dockerimage ..> docker : "<<deployed in>>"
+
+' Notas adicionales
+note right of client
+    **Cliente Web**
+    • Navegadores compatibles:
+      - Chrome 100+
+      - Edge 100+
+      - Firefox 100+
+      - Safari 15+
+    • Requiere JavaScript
+    • No requiere instalación
+end note
+
+note right of appserver
+    **Servidor de Aplicaciones**
+    Especificaciones:
+    • CPU: 2+ cores
+    • RAM: 2GB mínimo (4GB recomendado)
+    • Disco: 500MB
+    • OS: Windows/Linux/MacOS
+    • Puerto: 8080
+end note
+
+note bottom of h2db
+    **Base de Datos H2**
+    • Modo: In-Memory
+    • Persistencia: Volátil
+    • DDL: create-drop
+    • Console: /admin/h2-console
+    • Driver: org.h2.Driver
+
+    **Producción:**
+    Puede cambiarse a:
+    • PostgreSQL
+    • MySQL
+    • Oracle
+end note
+
+note left of docker
+    **Despliegue con Docker**
+    • Imagen: uaemex-nomina:latest
+    • Base: openjdk:17-slim
+    • Puerto expuesto: 8080
+    • Variables de entorno:
+      - JWT_SECRET
+      - JWT_EXPIRATION_MS
+      - DB_URL
+      - DB_USERNAME
+      - DB_PASSWORD
+end note
+
+' Configuración
+package "Configuración\nExterna" as config {
+    file "application-dev.yaml" as devconfig
+    file "application-prod.yaml" as prodconfig
+    file ".env" as envfile <<optional>>
+}
+
+appserver ..> config : "<<reads>>"
+docker ..> envfile : "<<uses>>"
+
+' Seguridad
+package "Seguridad" as security {
+    component "JWT Tokens" as jwt
+    component "BCrypt Password" as bcrypt
+    component "Spring Security" as springsec
+}
+
+appserver ..> security : "<<implements>>"
+
+note right of security
+    **Capa de Seguridad**
+    • Autenticación: JWT
+    • Contraseñas: BCrypt
+    • Sesiones: Stateless
+    • Cookies: HttpOnly, Secure
+end note
+
+' Protocolos
+legend right
+    |= Símbolo |= Significado |
+    | --> | Comunicación/Protocolo |
+    | ..> | Dependencia/Uso |
+    | <<optional>> | Componente opcional |
+
+    **Protocolos:**
+    • HTTP/HTTPS - Cliente a Servidor
+    • JDBC - Aplicación a Base de Datos
+
+    **Puertos:**
+    • 8080 - Aplicación Spring Boot
+    • H2 Console - /admin/h2-console
+endlegend
+
+@enduml
+

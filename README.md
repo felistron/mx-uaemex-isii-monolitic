@@ -160,15 +160,17 @@ Gestiona el acceso y persistencia de datos:
 
 ### Diagramas UML
 
-El proyecto incluye **5 diagramas UML completos** en formato PlantUML que documentan toda la arquitectura:
+El proyecto incluye **6 diagramas UML completos** en formato PlantUML que documentan toda la arquitectura:
 
+**Diagramas de Estructura (6):**
 1. **Diagrama Entidad-Relación** - Modelo de datos del sistema
 2. **Diagrama de Clases - Capa de Persistencia** - Entidades JPA y Repositorios
 3. **Diagrama de Clases - Capa de Servicios** - Service Layer y lógica de negocio
 4. **Diagrama de Clases - Capa de Lógica de Negocio** - Validadores y Excepciones
 5. **Diagrama de Clases - Capa de Presentación** - Controladores, DTOs y Filtros
+6. **Diagrama de Despliegue** - Arquitectura de infraestructura y despliegue
 
-**📊 Accede a los diagramas en:** [docs/uml/images](docs/uml/images)
+**📊 Accede a los diagramas en:** [docs/uml/](docs/uml/)
 
 Los diagramas pueden visualizarse usando:
 - PlantUML Online Server: https://www.plantuml.com/plantuml/uml/
@@ -392,12 +394,14 @@ Este proyecto fue desarrollado para la clase de Ingeniería de Software II impar
   - Glosario de términos
 
 ### Documentación Técnica
-- **[Diagramas UML](docs/uml/README.md)** - 5 diagramas completos de arquitectura en PlantUML
-  - Diagrama Entidad-Relación
-  - Diagrama de Clases - Capa de Persistencia
-  - Diagrama de Clases - Capa de Servicios
-  - Diagrama de Clases - Capa de Lógica de Negocio
-  - Diagrama de Clases - Capa de Presentación
+- **[📊 Diagramas UML](docs/uml/README.md)** - 9 diagramas completos de arquitectura en PlantUML
+  - **Diagramas de Estructura (6):**
+    - Diagrama Entidad-Relación
+    - Diagrama de Clases - Capa de Persistencia
+    - Diagrama de Clases - Capa de Servicios
+    - Diagrama de Clases - Capa de Lógica de Negocio
+    - Diagrama de Clases - Capa de Presentación
+    - Diagrama de Despliegue
 
 ### Documentación de Calidad
 - **[RESUMEN-DE-PRUEBAS.md](docs/RESUMEN-DE-PRUEBAS.md)** - Documentación completa de pruebas y cobertura
