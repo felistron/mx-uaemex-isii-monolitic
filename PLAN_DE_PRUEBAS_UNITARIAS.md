@@ -828,14 +828,15 @@ Este plan debe actualizarse cuando:
 - [x] PeriodoValidatorTest (5 casos) ✅
 - **Total Fase 2**: 29 pruebas nuevas | 154 pruebas totales | Todas pasando ✅
 
-#### Fase 3 - Media ✅ COMPLETADA PARCIAL (4 de diciembre de 2025)
-- [ ] Ampliar AuthControllerTest (13 casos adicionales) - Omitido
-- [ ] Ampliar AdminControllerTest (13 casos adicionales) - Omitido
+#### Fase 3 - Media ✅ COMPLETADA 100% (4 de diciembre de 2025)
+- [x] Ampliar AuthControllerTest (13 casos adicionales) ✅
+- [x] Ampliar AdminControllerTest (13 casos adicionales) ✅
 - [x] UserDetailsAdapterTest (9 casos) ✅
 - [x] CustomUserDetailsServiceTest (3 casos) ✅
 - [x] RegisterRequestTest (2 casos - simplificado) ✅
 - [x] NominaRequestTest (2 casos - simplificado) ✅
-- **Total Fase 3**: 16 pruebas nuevas | 170 pruebas totales | Todas pasando ✅
+- **Total Fase 3**: 42 pruebas nuevas | 196 pruebas totales | Todas pasando ✅
+- **Controladores**: AuthController 25 tests, AdminController 33 tests
 
 #### Fase 4 - Baja
 - [ ] EmpleadoTest (7 casos)

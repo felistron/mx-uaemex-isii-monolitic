@@ -517,5 +517,179 @@ class AdminControllerTest {
                         status().isForbidden()
                 );
     }
+
+    @Test
+    @WithMockUser(username = "admin@test.com", roles = "ADMIN")
+    void obtenerPaginaRegistrarNominaSinRfc() throws Exception {
+        mockMvc.perform(get("/admin/nomina/registrar"))
+                .andExpectAll(
+                        status().is3xxRedirection(),
+                        redirectedUrl("/admin/error/notfound")
+                );
+    }
+
+    @Test
+    @WithMockUser(username = "admin@test.com", roles = "ADMIN")
+    void registrarNominaConSalarioCero() throws Exception {
+        var empleado = Empleado.builder()
+                .id(1)
+                .rfc("AAAA012345XXX")
+                .nombre("JUAN")
+                .apellidos("PEREZ")
+                .correo("juan@test.com")
+                .build();
+
+        Mockito.when(empleadoRepository.existsByRfc("AAAA012345XXX")).thenReturn(true);
+        Mockito.when(empleadoService.buscarPorRFC("AAAA012345XXX")).thenReturn(empleado);
+
+        mockMvc.perform(post("/admin/nomina/registrar")
+                        .formField("rfc", "AAAA012345XXX")
+                        .formField("salario", "0.00")
+                        .formField("fechaInicio", "2025-01-01")
+                        .formField("fechaFin", "2025-01-31"))
+                .andExpectAll(
+                        status().isOk(),
+                        view().name("admin/nomina"),
+                        model().attributeExists("error", "salarioError")
+                );
+    }
+
+    @Test
+    @WithMockUser(username = "admin@test.com", roles = "ADMIN")
+    void registrarNominaConSalarioMinimo() throws Exception {
+        var empleado = Empleado.builder()
+                .id(1)
+                .rfc("AAAA012345XXX")
+                .nombre("JUAN")
+                .apellidos("PEREZ")
+                .correo("juan@test.com")
+                .build();
+
+        Mockito.when(empleadoRepository.existsByRfc("AAAA012345XXX")).thenReturn(true);
+        Mockito.when(empleadoService.buscarPorRFC("AAAA012345XXX")).thenReturn(empleado);
+
+        mockMvc.perform(post("/admin/nomina/registrar")
+                        .formField("rfc", "AAAA012345XXX")
+                        .formField("salario", "0.02")
+                        .formField("fechaInicio", "2025-01-01")
+                        .formField("fechaFin", "2025-01-31"))
+                .andExpectAll(
+                        status().is3xxRedirection(),
+                        redirectedUrl("/admin/dashboard")
+                );
+    }
+
+    @Test
+    @WithMockUser(username = "admin@test.com", roles = "ADMIN")
+    void eliminarNominaPorId() throws Exception {
+        var empleado = Empleado.builder()
+                .id(1)
+                .rfc("AAAA012345XXX")
+                .nombre("JUAN")
+                .apellidos("PEREZ")
+                .correo("juan@test.com")
+                .build();
+
+        var nomina = Nomina.builder()
+                .id(1)
+                .salarioBruto(10000.0f)
+                .periodoInicio(LocalDate.of(2025, 1, 1))
+                .periodoFin(LocalDate.of(2025, 1, 31))
+                .empleado(empleado)
+                .build();
+
+        Mockito.when(nominaService.obtenerNomina(1)).thenReturn(nomina);
+
+        mockMvc.perform(post("/admin/nomina/1/eliminar"))
+                .andExpectAll(
+                        status().is3xxRedirection(),
+                        redirectedUrl("/admin/nomina/consultar?rfc=AAAA012345XXX")
+                );
+    }
+
+    @Test
+    @WithMockUser(username = "admin@test.com", roles = "ADMIN")
+    void listarEmpleadosVacio() throws Exception {
+        Mockito.when(empleadoService.obtenerTodos()).thenReturn(java.util.Collections.emptyList());
+
+        mockMvc.perform(get("/admin/dashboard"))
+                .andExpectAll(
+                        status().isOk(),
+                        view().name("admin/dashboard"),
+                        model().attributeExists("empleados", "admin"),
+                        model().attribute("empleados", java.util.Collections.emptyList())
+                );
+    }
+
+    @Test
+    @WithMockUser(username = "admin@test.com", roles = "ADMIN")
+    void verEmpleadoConMultiplesNominas() throws Exception {
+        var mockEmpleado = Mockito.mock(mx.uaemex.fi.api.model.Empleado.class);
+        var nominas = java.util.Arrays.asList(
+                Mockito.mock(mx.uaemex.fi.api.model.Nomina.class),
+                Mockito.mock(mx.uaemex.fi.api.model.Nomina.class),
+                Mockito.mock(mx.uaemex.fi.api.model.Nomina.class)
+        );
+
+        Mockito.when(mockEmpleado.getNominas()).thenReturn(nominas);
+        Mockito.when(empleadoService.buscarPorRFC("AAAA012345XXX")).thenReturn(mockEmpleado);
+
+        mockMvc.perform(get("/admin/nomina/consultar")
+                        .param("rfc", "AAAA012345XXX"))
+                .andExpectAll(
+                        status().isOk(),
+                        view().name("admin/ver_nomina"),
+                        model().attributeExists("empleado", "admin")
+                );
+    }
+
+    @Test
+    void obtenerPaginaRegistrarNominaSinAutenticacion() throws Exception {
+        mockMvc.perform(get("/admin/nomina/registrar"))
+                .andExpectAll(
+                        status().isForbidden()
+                );
+    }
+
+    @Test
+    @WithMockUser(username = "user@test.com", roles = "USER")
+    void obtenerPaginaRegistrarNominaConRolIncorrecto() throws Exception {
+        mockMvc.perform(get("/admin/nomina/registrar"))
+                .andExpectAll(
+                        status().isForbidden()
+                );
+    }
+
+    @Test
+    @WithMockUser(username = "admin@test.com", roles = "ADMIN")
+    void registrarNominaConCamposVacios() throws Exception {
+        Mockito.when(empleadoService.buscarPorRFC("")).thenThrow(new NotFoundException("Empleado no encontrado"));
+
+        mockMvc.perform(post("/admin/nomina/registrar")
+                        .formField("rfc", "")
+                        .formField("salario", "")
+                        .formField("fechaInicio", "")
+                        .formField("fechaFin", ""))
+                .andExpectAll(
+                        status().is3xxRedirection(),
+                        redirectedUrl("/admin/error/notfound")
+                );
+    }
+
+    @Test
+    @WithMockUser(username = "admin@test.com", roles = "ADMIN")
+    void registrarNominaConRfcFormatoInvalido() throws Exception {
+        Mockito.when(empleadoService.buscarPorRFC("RFC-INVALIDO")).thenThrow(new NotFoundException("Empleado no encontrado"));
+
+        mockMvc.perform(post("/admin/nomina/registrar")
+                        .formField("rfc", "RFC-INVALIDO")
+                        .formField("salario", "10000")
+                        .formField("fechaInicio", "2025-01-01")
+                        .formField("fechaFin", "2025-01-31"))
+                .andExpectAll(
+                        status().is3xxRedirection(),
+                        redirectedUrl("/admin/error/notfound")
+                );
+    }
 }
 
