@@ -15,23 +15,45 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/empleados">Empleados</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/nomina">Nomina</a>
-                    </li>
-                </ul>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
-                    <li class="nav-item"><p class="m-0">Bienvenido, <strong th:text="${empleado.getNombre()}"></strong></p></li>
+                    <li class="nav-item"><p class="m-0"><strong th:text="${admin}"></strong></p></li>
                     <li class="nav-item"><a class="nav-link" href="/auth/logout">Cerrar sesion</a></li>
                 </ul>
             </div>
         </div>
     </nav>
     <main>
-
+        <section class="w-75 m-auto mt-4">
+            <div class="d-flex justify-content-between align-items-center my-5">
+                <h1>Empleados</h1>
+                <a class="btn btn-primary" th:href="@{/auth/registrar}" role="button">Registrar empleado</a>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>RFC</th>
+                        <th>Nombre(s)</th>
+                        <th>Apellido(s)</th>
+                        <th>Correo</th>
+                        <th>Administrador</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="empleado : ${empleados}">
+                        <td th:text="${empleado.rfc}"></td>
+                        <td th:text="${empleado.nombre}"></td>
+                        <td th:text="${empleado.apellidos}"></td>
+                        <td th:text="${empleado.correo}"></td>
+                        <td th:text="${empleado.getAcceso()} ? 'Si' : 'No'"></td>
+                        <td>
+                            <a class="btn btn-primary" th:href="@{'/admin/nomina/registrar?rfc=' + ${empleado.rfc}}" role="button">Calcular nómina</a>
+                            <a class="btn btn-secondary" th:href="@{'/admin/nomina/consultar?rfc=' + ${empleado.rfc}}" role="button">Consultar nóminas</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
     </main>
 </body>
 </html>

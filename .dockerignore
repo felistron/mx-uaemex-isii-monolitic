@@ -1,0 +1,14 @@
+# Archivos y directorios a ignorar en el build de Docker
+target/
+.git/
+.gitignore
+.idea/
+*.iml
+.mvn/
+mvnw
+mvnw.cmd
+*.md
+.env
+.dockerignore
+Dockerfile
+
