@@ -53,6 +53,155 @@ Sistema de gestión de nómina. Esta aplicación monolítica proporciona funcion
 
 ---
 
+## Guía de Inicio Rápido
+
+### Requisitos Previos
+
+- **Java 17** o superior
+- **Maven 3.6+**
+- **Docker** (opcional, para despliegue en contenedores)
+
+### 1. Clonar el Repositorio
+
+```bash
+git clone https://github.com/felistron/mx-uaemex-isii-monolitic.git
+cd mx-uaemex-isii-monolitic
+```
+
+### 2. Compilar el Proyecto
+
+```bash
+# Compilar sin ejecutar pruebas
+mvn clean compile
+
+# Compilar y ejecutar pruebas
+mvn clean install
+
+# Compilar y empaquetar (genera JAR)
+mvn clean package
+```
+
+### 3. Ejecutar la Aplicación
+
+#### Opción A: Usando Maven
+
+```bash
+# Ejecutar en modo desarrollo
+mvn spring-boot:run
+
+# Ejecutar con perfil específico
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+#### Opción B: Ejecutar el JAR generado
+
+```bash
+# Compilar y empaquetar
+mvn clean package
+
+# Ejecutar el JAR
+java -jar target/mx-uaemex-isii-monolitic-1.0-SNAPSHOT.jar
+
+# Ejecutar con perfil específico
+java -jar target/mx-uaemex-isii-monolitic-1.0-SNAPSHOT.jar --spring.profiles.active=dev
+```
+
+### 4. Verificar la Aplicación
+
+Una vez iniciada la aplicación, estará disponible en:
+
+```
+http://localhost:8080
+```
+
+---
+
+## Despliegue con Docker
+
+### Construcción de la Imagen
+
+```bash
+# Construir la imagen Docker
+docker build -t uaemex-nomina:latest .
+```
+
+### Ejecutar el Contenedor
+
+#### Opción 1: Con variables de entorno en línea de comandos
+
+```bash
+docker run -d -p 8080:8080 \
+  -e SPRING_PROFILES_ACTIVE=dev \
+  -e JWT_SECRET=tu-secreto-jwt-super-seguro-de-al-menos-256-bits \
+  -e JWT_EXPIRATION_MS=86400000 \
+  -e DB_URL=jdbc:h2:mem:testdb \
+  -e DB_USERNAME=sa \
+  -e DB_PASSWORD= \
+  --name uaemex-nomina-app \
+  uaemex-nomina:latest
+```
+
+#### Opción 2: Usando archivo .env
+
+1. Crear archivo `.env` con las variables de entorno necesarias
+2. Ejecutar el contenedor:
+
+```bash
+docker run -d -p 8080:8080 \
+  --env-file .env \
+  --name uaemex-nomina-app \
+  uaemex-nomina:latest
+```
+
+### Comandos Útiles de Docker
+
+```bash
+# Ver contenedores en ejecución
+docker ps
+
+# Ver logs de la aplicación
+docker logs uaemex-nomina-app
+
+# Detener el contenedor
+docker stop uaemex-nomina-app
+
+# Iniciar el contenedor
+docker start uaemex-nomina-app
+
+# Eliminar el contenedor
+docker rm uaemex-nomina-app
+
+# Eliminar la imagen
+docker rmi uaemex-nomina:latest
+```
+
+**Para una guía completa de Docker, consulta [README-DOCKER.md](docs/README-DOCKER.md)**
+
+---
+
+## Configuración
+
+### Perfiles de Spring
+
+La aplicación soporta múltiples perfiles:
+
+- **dev**: Perfil de desarrollo
+- **prod**: Perfil de producción
+- **test**: Perfil para pruebas
+
+### Variables de Entorno
+
+| Variable                 | Descripción                       | Ejemplo              |
+|--------------------------|-----------------------------------|----------------------|
+| `SPRING_PROFILES_ACTIVE` | Perfil activo de Spring           | `dev`, `prod`        |
+| `JWT_SECRET`             | Secreto para firma de JWT         | `tu-secreto-seguro`  |
+| `JWT_EXPIRATION_MS`      | Tiempo de expiración del JWT (ms) | `86400000` (24h)     |
+| `DB_URL`                 | URL de conexión a base de datos   | `jdbc:h2:mem:testdb` |
+| `DB_USERNAME`            | Usuario de base de datos          | `sa`                 |
+| `DB_PASSWORD`            | Contraseña de base de datos       | ``                   |
+
+---
+
 ## Arquitectura
 
 ### Arquitectura General
@@ -219,155 +368,6 @@ mvn clean test jacoco:report
 ```
 
 **Para más detalles sobre las pruebas, consulta [RESUMEN-DE-PRUEBAS.md](docs/RESUMEN-DE-PRUEBAS.md)**
-
----
-
-## Guía de Inicio Rápido
-
-### Requisitos Previos
-
-- **Java 17** o superior
-- **Maven 3.6+**
-- **Docker** (opcional, para despliegue en contenedores)
-
-### 1. Clonar el Repositorio
-
-```bash
-git clone <url-del-repositorio>
-cd mx-uaemex-isii-monolitic
-```
-
-### 2. Compilar el Proyecto
-
-```bash
-# Compilar sin ejecutar pruebas
-mvn clean compile
-
-# Compilar y ejecutar pruebas
-mvn clean install
-
-# Compilar y empaquetar (genera JAR)
-mvn clean package
-```
-
-### 3. Ejecutar la Aplicación
-
-#### Opción A: Usando Maven
-
-```bash
-# Ejecutar en modo desarrollo
-mvn spring-boot:run
-
-# Ejecutar con perfil específico
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
-```
-
-#### Opción B: Ejecutar el JAR generado
-
-```bash
-# Compilar y empaquetar
-mvn clean package
-
-# Ejecutar el JAR
-java -jar target/mx-uaemex-isii-monolitic-1.0-SNAPSHOT.jar
-
-# Ejecutar con perfil específico
-java -jar target/mx-uaemex-isii-monolitic-1.0-SNAPSHOT.jar --spring.profiles.active=dev
-```
-
-### 4. Verificar la Aplicación
-
-Una vez iniciada la aplicación, estará disponible en:
-
-```
-http://localhost:8080
-```
-
----
-
-## Despliegue con Docker
-
-### Construcción de la Imagen
-
-```bash
-# Construir la imagen Docker
-docker build -t uaemex-nomina:latest .
-```
-
-### Ejecutar el Contenedor
-
-#### Opción 1: Con variables de entorno en línea de comandos
-
-```bash
-docker run -d -p 8080:8080 \
-  -e SPRING_PROFILES_ACTIVE=dev \
-  -e JWT_SECRET=tu-secreto-jwt-super-seguro-de-al-menos-256-bits \
-  -e JWT_EXPIRATION_MS=86400000 \
-  -e DB_URL=jdbc:h2:mem:testdb \
-  -e DB_USERNAME=sa \
-  -e DB_PASSWORD= \
-  --name uaemex-nomina-app \
-  uaemex-nomina:latest
-```
-
-#### Opción 2: Usando archivo .env
-
-1. Crear archivo `.env` con las variables de entorno necesarias
-2. Ejecutar el contenedor:
-
-```bash
-docker run -d -p 8080:8080 \
-  --env-file .env \
-  --name uaemex-nomina-app \
-  uaemex-nomina:latest
-```
-
-### Comandos Útiles de Docker
-
-```bash
-# Ver contenedores en ejecución
-docker ps
-
-# Ver logs de la aplicación
-docker logs uaemex-nomina-app
-
-# Detener el contenedor
-docker stop uaemex-nomina-app
-
-# Iniciar el contenedor
-docker start uaemex-nomina-app
-
-# Eliminar el contenedor
-docker rm uaemex-nomina-app
-
-# Eliminar la imagen
-docker rmi uaemex-nomina:latest
-```
-
-**Para una guía completa de Docker, consulta [README-DOCKER.md](docs/README-DOCKER.md)**
-
----
-
-## Configuración
-
-### Perfiles de Spring
-
-La aplicación soporta múltiples perfiles:
-
-- **dev**: Perfil de desarrollo
-- **prod**: Perfil de producción
-- **test**: Perfil para pruebas
-
-### Variables de Entorno
-
-| Variable                 | Descripción                       | Ejemplo              |
-|--------------------------|-----------------------------------|----------------------|
-| `SPRING_PROFILES_ACTIVE` | Perfil activo de Spring           | `dev`, `prod`        |
-| `JWT_SECRET`             | Secreto para firma de JWT         | `tu-secreto-seguro`  |
-| `JWT_EXPIRATION_MS`      | Tiempo de expiración del JWT (ms) | `86400000` (24h)     |
-| `DB_URL`                 | URL de conexión a base de datos   | `jdbc:h2:mem:testdb` |
-| `DB_USERNAME`            | Usuario de base de datos          | `sa`                 |
-| `DB_PASSWORD`            | Contraseña de base de datos       | ``                   |
 
 ---
 
