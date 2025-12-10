@@ -111,7 +111,7 @@ java -jar target/mx-uaemex-isii-monolitic-1.0-SNAPSHOT.jar --spring.profiles.act
 Una vez iniciada la aplicación, estará disponible en:
 
 ```
-http://localhost:8080
+http://localhost:8080/auth/registrar
 ```
 
 ---
